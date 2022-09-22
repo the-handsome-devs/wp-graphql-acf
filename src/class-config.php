@@ -690,7 +690,17 @@ class Config {
 								if ( $post_object instanceof \WP_Post ) {
 									$post_model     = new Post( $post_object );
 									if ( 'private' != $post_model->get_visibility() ) {
-										$relationship[] = $post_model;
+										/**
+									 * Allow for filtering of the post model. In case a non-core defined post-type is being targeted.
+									 *
+									 * @param mixed|null  $post_model  GraphQL Model
+									 * @param mixed|null  $post_object Root ACF Field value.
+									 * @param AppContext  $context     AppContext instance.
+						 			 * @param ResolveInfo $info        ResolveInfo instance.
+									 * AUTHOR: https://github.com/wp-graphql/wp-graphql-acf/compare/develop...jacobarriola:wp-graphql-acf:patch-1
+									 * OUR ISSUE: https://github.com/wp-graphql/wp-graphql-woocommerce/issues/449
+									 */
+										$relationship[] = apply_filters( 'graphql_acf_relationship_model', $post_model, $post_object, $context, $info );
 									}
 								}
 							}
